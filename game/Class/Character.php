@@ -1,15 +1,15 @@
 <?php
-require_once 'Player.php';
-require_once 'conn.php';
+require_once 'connect.php';
+require_once 'Class/Player.php';
 
-class createCharacter {
-    private $conn;
+class Character {
+    private $connect;
 
     // 建構函數：設置資料庫連接
-    public function __construct($conn) {
-        $this->conn = $conn;
+    public function __construct($connect) {
+        $this->connect = $connect;
     }
-    public function create($conn) {
+    public function createCharacter($connect) {
         // 新建角色
         echo "請輸入您的角色名稱: ";
         $playerName = readline();
@@ -17,7 +17,7 @@ class createCharacter {
         // 檢查角色名字不得為空
         if (empty($playerName)) {
             echo "角色名字不得為空！";
-            return $this->create($conn);
+            return $this->createCharacter($connect);
         }
         // 顯示職業選項
         echo "請選擇您的職業: \n";
@@ -36,7 +36,7 @@ class createCharacter {
             $magicPoints = 50;
         } else {
             echo "無效的選擇！請重新輸入。\n";
-            return $this->create($conn);
+            return $this->createCharacter($connect);
         }
         
         // 初始提供10點屬性點可自行分配
@@ -101,12 +101,12 @@ class createCharacter {
         } else {
             // 無效選擇
             echo "無效的選擇! 請重新進行選擇。\n";
-            return $this->create($conn);
+            return $this->createCharacter($connect);
         }
 
         // 使用 Player 類的方法創建角色
-        $player = new Player($conn);
-        $player->createCharacter($playerName, $jobChoice, $jobName, $healthPoints, $attackPoints, $defensePoints, $magicPoints, $magicAttackPoints, $magicDefensePoints, $luckPoints);
+        $player = new Player($connect);
+        $player->create($playerName, $jobChoice, $jobName, $healthPoints, $attackPoints, $defensePoints, $magicPoints, $magicAttackPoints, $magicDefensePoints, $luckPoints);
         echo "===== 角色創建中! =====\n";
         sleep(3);
         if ($player) {
@@ -147,52 +147,7 @@ class createCharacter {
 
         } else {
             echo "創建角色失敗! 請重新創建角色! \n";
-            return $this->create($conn);
+            return $this->createCharacter($connect);
         }
     }
 }
-
-// // 属性分配器類別
-// class AttributeAllocator {
-//     // 隨機分配剩餘屬性點並返回分配結果的陣列
-//     public static function randomAssign($remainingPoints) {
-//         // 初始化各属性點為0
-//         $attackPoints = 0;
-//         $defensePoints = 0;
-//         $magicAttackPoints = 0;
-//         $magicDefensePoints = 0;
-//         $luckPoints = 0;
-
-//         // 剩餘屬性點為0才停止迴圈
-//         while ($remainingPoints > 0) {
-//             // 隨機分配1到剩餘點數之間的點數到各屬性
-//             $randomPoints = rand(1, $remainingPoints);
-            
-//             // 隨機選擇一個屬性並分配點數
-//             $randomAttribute = rand(1, 5); // 將各屬性先標號
-//             if ($randomAttribute === 1) {
-//                 $attackPoints += $randomPoints;
-//             } elseif ($randomAttribute === 2) {
-//                 $defensePoints += $randomPoints;
-//             } elseif ($randomAttribute === 3) {
-//                 $magicAttackPoints += $randomPoints;
-//             } elseif ($randomAttribute === 4) {
-//                 $magicDefensePoints += $randomPoints;
-//             } elseif ($randomAttribute === 5) {
-//                 $luckPoints += $randomPoints;
-//             }
-            
-//             // 更新剩餘屬性點
-//             $remainingPoints -= $randomPoints;
-//         }
-
-//         // 返回分配結果的陣列
-//         return [
-//             'attackPoints' => $attackPoints,
-//             'defensePoints' => $defensePoints,
-//             'magicAttackPoints' => $magicAttackPoints,
-//             'magicDefensePoints' => $magicDefensePoints,
-//             'luckPoints' => $luckPoints
-//         ];
-//     }
-// }
