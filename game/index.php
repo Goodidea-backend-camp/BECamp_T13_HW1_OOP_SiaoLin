@@ -1,13 +1,13 @@
 <?php
 // 引入文件
-require_once "conn.php";
+require_once "connect.php";
 require_once "Class/MainMenu.php";
 require_once "Class/Character.php";
 require_once "Class/Player.php";
 
 // 初始化遊戲
 $mainMenu = new MainMenu();
-$createCharacter = new createCharacter($conn);
+$createCharacter = new Character($connect);
 
 // 顯示遊戲主選單
 $mainMenu->showMainMenu();
@@ -21,6 +21,6 @@ while (TRUE) {
         // 開始遊戲
     } elseif ($choice ==='2') {
         // 創建角色
-        $createCharacter->create($conn);
+        $createCharacter->createCharacter($connect);
     }
 }
