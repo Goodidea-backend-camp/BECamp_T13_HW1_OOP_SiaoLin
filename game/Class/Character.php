@@ -24,7 +24,7 @@ class Character {
             '2' => ['name' => '法師', 'healthPoints' => 80, 'magicPoints' => 80, 'allowedAttributes' => ['magicAttackPoints', 'magicDefensePoints', 'luckPoints']]
         ];
     
-        $jobChoice = $this->inputSelection("請選擇您的職業: \n1. 劍士\n2. 法師\n", array_map('strval', array_keys($jobs)));
+        $jobChoice = readline("請選擇您的職業: \n1. 劍士\n2. 法師\n");
         $job = $jobs[$jobChoice];
 
         // 提供10點屬性點可自行分配
@@ -37,7 +37,7 @@ class Character {
             'luckPoints' => 0
         ];
     
-        $assignationChoice = $this->inputSelection("您有10點屬性點可自行分配!\n是否進行分配? \n1. 是\n2. 否\n", ['1', '2']);
+        $assignationChoice = readline("您有10點屬性點可自行分配!\n是否進行分配? \n1. 是\n2. 否\n");
     
         if ($assignationChoice === '1') {
             $attributes = $this->manualAttributeAssignment($attributes, $remainingPoints, $job['allowedAttributes']);
@@ -46,7 +46,7 @@ class Character {
         }
     
         // 創建 Player 物件並呼叫 savePlayerProfile 方法來保存資料
-        $player = new Player($connect, $job['healthPoints'], $attributes['attackPoints'], $attributes['defensePoints'], $job['magicPoints'], $attributes['magicAttackPoints'], $attributes['magicDefensePoints'], $attributes['luckPoints']);
+        $player = new Player($connect, $playerName, $job['healthPoints'], $attributes['attackPoints'], $attributes['defensePoints'], $job['magicPoints'], $attributes['magicAttackPoints'], $attributes['magicDefensePoints'], $attributes['luckPoints']);
         $player->savePlayerProfile($playerName, $jobChoice, $job['name']);
         if ($player) {
             echo "===== 角色創建中! =====\n";
@@ -57,19 +57,9 @@ class Character {
         }
         // 顯示角色屬性
         $this->displayCharacter($playerName, $job, $attributes);
+        return $player;
     }
-
-    // 玩家輸入選擇處理邏輯:確保輸入有效
-    private function inputSelection(string $prompt, array $validChoices): string {
-        while (true) {
-            echo $prompt;
-            $choice = readline();
-            if (in_array($choice, $validChoices, true)) {
-                return $choice;
-            }
-            echo "無效的選擇！請重新輸入。\n";
-        }
-    }
+    
     // 手動分配屬性點的方法
     private function manualAttributeAssignment(array $attributes, int $remainingPoints, array $allowedAttributes): array {
         foreach ($allowedAttributes as $attribute) {
@@ -78,7 +68,7 @@ class Character {
             }
     
             echo "剩餘可分配點數為: " . $remainingPoints . "點\n";
-            $points = intval(readline("請分配{$this->translateAttribute($attribute)}點數: \n"));
+            $points = readline("請分配{$this->translateAttribute($attribute)}點數: \n");
             
             // 檢查輸入的點數是否有效
             if ($points > $remainingPoints) {
