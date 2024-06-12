@@ -1,23 +1,26 @@
 <?php
-require_once 'connect.php';
-require_once 'Class/Player.php';
+require_once "connect.php";
+require_once "Class/Player.php";
 
 class Character {
-    private $connect;
+    public $name;
+    public $job;
+    public $jobName;
+    public $attributes;
 
-    // 建構函數：設置資料庫連接
-    public function __construct($connect) {
-        $this->connect = $connect;
-    }
-    public function createCharacter($connect) {
+    public function createCharacter() {
         // 新建角色
+        echo "===== 創建角色 =====\n";
+        echo "\n";
         echo "請輸入您的角色名稱: ";
         $playerName = readline();
         // 檢查角色名字不得為空
         if (empty($playerName)) {
             echo "角色名字不得為空！";
-            return $this->createCharacter($connect);
+            return $this->createCharacter();
         }
+        $this->name = $playerName;
+
         // 顯示職業選項並限制職業屬性
         $jobs = [
             '1' => ['name' => '劍士', 'healthPoints' => 100, 'magicPoints' => 0, 'allowedAttributes' => ['attackPoints', 'defensePoints', 'luckPoints']],
@@ -26,6 +29,11 @@ class Character {
     
         $jobChoice = readline("請選擇您的職業: \n1. 劍士\n2. 法師\n");
         $job = $jobs[$jobChoice];
+        $this->job = $job;
+        $this->jobName = $job['name'];
+
+        echo "===== 角色屬性點 =====\n";
+        echo "\n";
 
         // 提供10點屬性點可自行分配
         $remainingPoints = 10;
@@ -44,20 +52,42 @@ class Character {
         } else {
             $attributes = $this->randomAttributeAssignment($attributes, $remainingPoints, $job['allowedAttributes']);
         }
-    
-        // 創建 Player 物件並呼叫 savePlayerProfile 方法來保存資料
-        $player = new Player($connect, $playerName, $job['healthPoints'], $attributes['attackPoints'], $attributes['defensePoints'], $job['magicPoints'], $attributes['magicAttackPoints'], $attributes['magicDefensePoints'], $attributes['luckPoints']);
-        $player->savePlayerProfile($playerName, $jobChoice, $job['name']);
-        if ($player) {
-            echo "===== 角色創建中! =====\n";
-            sleep(3);
-        } else {
-            echo "創建角色失敗! 請重新創建角色! \n";
-            return $this->createCharacter($connect);
-        }
+        $this->attributes = $attributes;
+
+        echo "===== 角色創建中! =====\n";
+        sleep(1);
+        echo ".\n";
+        echo ".\n";
+        echo ".\n";
+        sleep(1);
+
         // 顯示角色屬性
         $this->displayCharacter($playerName, $job, $attributes);
-        return $player;
+        echo ".\n";
+        echo ".\n";
+        echo ".\n";
+
+        return $playerName;
+    }
+
+    // 取得玩家名稱的方法
+    public function getPlayerName() {
+        return $this->name;
+    }
+
+    // 取得職業選項的方法
+    public function getJob() {
+        return $this->job;
+    }
+
+    // 取得職業名稱的方法
+    public function getJobName() {
+        return $this->jobName;
+    }
+
+    // 取得屬性的方法
+    public function getAttributes() {
+        return $this->attributes;
     }
     
     // 手動分配屬性點的方法
