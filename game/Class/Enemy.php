@@ -45,6 +45,10 @@ class Enemy {
             $this->isBoss = false;
         }
     }
+    //取得敵人名稱的值
+    public function getName() {
+        return $this->name;
+    }
 
     // 取得敵人類型的值
     public function getType() {
@@ -115,10 +119,4 @@ class Enemy {
     public function getExperience() {
         return $this->isBoss ? 20 : 10; // 每打倒一個小怪獲得10經驗值，魔王獲得20經驗值
     }
-}
-
-// 測試生成敵人
-for ($i = 1; $i <= 10; $i++) {
-    $enemy = new Enemy($i);
-    echo "關卡 $i: " . $enemy->getType() . " - 生命值: " . $enemy->getHealthPoints() . " 攻擊力: " . $enemy->getAttackPoints() . "\n";
 }
